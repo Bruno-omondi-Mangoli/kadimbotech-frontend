@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -65,11 +66,12 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${inter.variable} ${plusJakarta.variable}`}
     >
-      <body>
+  <body>
         <Navbar />
-        <main>
+        <main className="pt-16 md:pt-20">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   );
