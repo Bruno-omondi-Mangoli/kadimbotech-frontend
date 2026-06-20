@@ -1,29 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans, Geist } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 
-/*
-  next/font/google downloads fonts at build time and serves
-  them from your own domain — no external requests to Google
-  at runtime. This improves privacy and performance.
-*/
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-const plusJakarta = Plus_Jakarta_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-heading",   // Links to our CSS variable
+  variable: "--font-sans",
   display: "swap",
 });
 
-/*
-  Metadata is used by Next.js to generate <head> tags.
-  This is the default metadata — each page can override it.
-*/
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Kadimbotech Solutions — Empowering Ideas, Driving Innovation",
-    template: "%s | Kadimbotech Solutions",  // Page title format
+    template: "%s | Kadimbotech Solutions",
   },
   description:
     "Kadimbotech Solutions provides professional web development, graphic design, data analysis, and data annotation services across Kenya, Africa, and globally.",
@@ -65,14 +60,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    /*
-      We attach both font variables to the <html> element.
-      This makes --font-sans and --font-heading available
-      to every component in the entire app.
-    */
-    <html lang="en" className={cn(plusJakarta.variable, "font-sans", geist.variable)}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${inter.variable} ${plusJakarta.variable}`}
+    >
       <body>
-        {children}
+        <Navbar />
+        <main>
+          {children}
+        </main>
       </body>
     </html>
   );

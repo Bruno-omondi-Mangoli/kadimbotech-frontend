@@ -1,45 +1,29 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-/*
-  ---break---
-*/
+
 @custom-variant dark (&:is(.dark *));
 
-/*
-  ============================================
-  TAILWIND V4 THEME CONFIGURATION
-  In Tailwind v4, all customization lives here
-  using the @theme directive. No config file needed.
-  ============================================
-*/
+/* ============================================
+   TAILWIND V4 THEME — BRAND TOKENS
+   ============================================ */
 @theme {
-  /* -------------------------------------------
-     BRAND COLORS
-     Usage: bg-navy, text-teal, border-gold
-     ------------------------------------------- */
-  --color-navy:       #1F4173;
-  --color-blue:       #0B5E8E;
-  --color-teal:       #22C7B8;
-  --color-gold:       #F4C542;
+  /* Brand colors — use as bg-navy, text-teal, border-gold */
+  --color-navy:        #1F4173;
+  --color-blue:        #0B5E8E;
+  --color-teal:        #22C7B8;
+  --color-gold:        #F4C542;
+  --color-navy-light:  #2A5499;
+  --color-navy-dark:   #162E52;
+  --color-teal-light:  #3DD6C8;
+  --color-teal-dark:   #18A99C;
 
-  --color-navy-light: #2A5499;
-  --color-navy-dark:  #162E52;
-  --color-teal-light: #3DD6C8;
-  --color-teal-dark:  #18A99C;
-
-  /* -------------------------------------------
-     FONTS
-     Usage: font-sans, font-heading, font-mono
-     ------------------------------------------- */
+  /* Fonts */
   --font-sans:    "Inter", sans-serif;
   --font-heading: "Plus Jakarta Sans", sans-serif;
   --font-mono:    "Fira Code", monospace;
 
-  /* -------------------------------------------
-     BREAKPOINTS
-     Usage: sm:, md:, lg:, xl:, 2xl:
-     ------------------------------------------- */
+  /* Breakpoints */
   --breakpoint-xs:  375px;
   --breakpoint-sm:  640px;
   --breakpoint-md:  768px;
@@ -47,114 +31,174 @@
   --breakpoint-xl:  1280px;
   --breakpoint-2xl: 1536px;
 
-  /* -------------------------------------------
-     SPACING EXTRAS
-     Usage: p-section, py-section
-     ------------------------------------------- */
+  /* Spacing */
   --spacing-section:    5rem;
   --spacing-section-sm: 3rem;
-
-  /* -------------------------------------------
-     BORDER RADIUS
-     Usage: rounded-brand, rounded-card
-     ------------------------------------------- */
-  --radius-brand: 10px;
-  --radius-card:  16px;
 }
 
-/*
-  ============================================
-  GLOBAL CSS VARIABLES
-  Available everywhere via var(--...)
-  ============================================
-*/
+/* ============================================
+   SHADCN COLOR VARIABLES — BRANDED
+   ShadCN components read these variables.
+   We point them at Kadimbotech brand colors.
+   ============================================ */
 :root {
+  /* Page background and text */
+  --background:        oklch(1 0 0);           /* White */
+  --foreground:        oklch(0.13 0.03 260);   /* Near black with navy tint */
+
+  /* Card surfaces */
+  --card:              oklch(1 0 0);
+  --card-foreground:   oklch(0.13 0.03 260);
+
+  /* Popover / dropdown surfaces */
+  --popover:           oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0.03 260);
+
+  /* Primary = Navy #1F4173
+     Used by: Button default, active states */
+  --primary:           oklch(0.31 0.09 255);
+  --primary-foreground: oklch(1 0 0);          /* White text on navy */
+
+  /* Secondary = Light gray-blue surface */
+  --secondary:         oklch(0.96 0.01 255);
+  --secondary-foreground: oklch(0.31 0.09 255);
+
+  /* Muted = Off-white sections */
+  --muted:             oklch(0.97 0.005 255);
+  --muted-foreground:  oklch(0.50 0.02 255);
+
+  /* Accent = Teal #22C7B8
+     Used by: hover states, highlights, focus rings */
+  --accent:            oklch(0.73 0.12 185);
+  --accent-foreground: oklch(1 0 0);           /* White text on teal */
+
+  /* Destructive = Red for errors/delete actions */
+  --destructive:       oklch(0.577 0.245 27.325);
+
+  /* Borders and inputs */
+  --border:            oklch(0.90 0.01 255);
+  --input:             oklch(0.90 0.01 255);
+
+  /* Ring = Teal for focus outlines */
+  --ring:              oklch(0.73 0.12 185);
+
+  /* Border radius base — ShadCN scales from this */
+  --radius: 0.625rem;
+
+  /* Charts */
+  --chart-1: oklch(0.31 0.09 255);   /* Navy */
+  --chart-2: oklch(0.73 0.12 185);   /* Teal */
+  --chart-3: oklch(0.82 0.15 85);    /* Gold */
+  --chart-4: oklch(0.50 0.08 255);   /* Mid blue */
+  --chart-5: oklch(0.20 0.06 255);   /* Dark navy */
+
+  /* Sidebar */
+  --sidebar:                    oklch(0.31 0.09 255);   /* Navy sidebar */
+  --sidebar-foreground:         oklch(1 0 0);
+  --sidebar-primary:            oklch(0.73 0.12 185);   /* Teal active */
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent:             oklch(0.25 0.07 255);   /* Dark navy hover */
+  --sidebar-accent-foreground:  oklch(1 0 0);
+  --sidebar-border:             oklch(0.25 0.07 255);
+  --sidebar-ring:               oklch(0.73 0.12 185);
+
+  /* Custom brand variables — used in our own components */
   --color-text-primary:   #1A1A2E;
   --color-text-secondary: #4A5568;
   --color-text-light:     #718096;
-
-  --color-bg-primary:   #FFFFFF;
-  --color-bg-secondary: #F7F9FC;
-  --color-bg-dark:      #0D1B2A;
-
-  --color-border: #E2E8F0;
-
+  --color-bg-primary:     #FFFFFF;
+  --color-bg-secondary:   #F7F9FC;
+  --color-bg-dark:        #0D1B2A;
+  --color-border-brand:   #E2E8F0;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
   --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
-
   --transition: 0.2s ease-in-out;
-
-  --background:       oklch(1 0 0);
-
-  --foreground:       oklch(0.145 0 0);
-
-  --card:       oklch(1 0 0);
-
-  --card-foreground:       oklch(0.145 0 0);
-
-  --popover:       oklch(1 0 0);
-
-  --popover-foreground:       oklch(0.145 0 0);
-
-  --primary:       oklch(0.205 0 0);
-
-  --primary-foreground:       oklch(0.985 0 0);
-
-  --secondary:       oklch(0.97 0 0);
-
-  --secondary-foreground:       oklch(0.205 0 0);
-
-  --muted:       oklch(0.97 0 0);
-
-  --muted-foreground:       oklch(0.556 0 0);
-
-  --accent:       oklch(0.97 0 0);
-
-  --accent-foreground:       oklch(0.205 0 0);
-
-  --destructive:       oklch(0.577 0.245 27.325);
-
-  --border:       oklch(0.922 0 0);
-
-  --input:       oklch(0.922 0 0);
-
-  --ring:       oklch(0.708 0 0);
-
-  --chart-1:       oklch(0.87 0 0);
-
-  --chart-2:       oklch(0.556 0 0);
-
-  --chart-3:       oklch(0.439 0 0);
-
-  --chart-4:       oklch(0.371 0 0);
-
-  --chart-5:       oklch(0.269 0 0);
-
-  --radius:       0.625rem;
-
-  --sidebar:       oklch(0.985 0 0);
-
-  --sidebar-foreground:       oklch(0.145 0 0);
-
-  --sidebar-primary:       oklch(0.205 0 0);
-
-  --sidebar-primary-foreground:       oklch(0.985 0 0);
-
-  --sidebar-accent:       oklch(0.97 0 0);
-
-  --sidebar-accent-foreground:       oklch(0.205 0 0);
-
-  --sidebar-border:       oklch(0.922 0 0);
-
-  --sidebar-ring:       oklch(0.708 0 0);
 }
 
-/*
-  ============================================
-  BASE RESET & GLOBAL STYLES
-  ============================================
-*/
+/* ============================================
+   DARK MODE OVERRIDES
+   Applied when .dark class is on <html>
+   ============================================ */
+.dark {
+  --background:        oklch(0.10 0.03 255);
+  --foreground:        oklch(0.97 0.005 255);
+  --card:              oklch(0.15 0.04 255);
+  --card-foreground:   oklch(0.97 0.005 255);
+  --popover:           oklch(0.15 0.04 255);
+  --popover-foreground: oklch(0.97 0.005 255);
+  --primary:           oklch(0.73 0.12 185);   /* Teal becomes primary in dark */
+  --primary-foreground: oklch(0.10 0.03 255);
+  --secondary:         oklch(0.20 0.05 255);
+  --secondary-foreground: oklch(0.97 0.005 255);
+  --muted:             oklch(0.20 0.05 255);
+  --muted-foreground:  oklch(0.65 0.02 255);
+  --accent:            oklch(0.73 0.12 185);
+  --accent-foreground: oklch(0.10 0.03 255);
+  --destructive:       oklch(0.704 0.191 22.216);
+  --border:            oklch(1 0 0 / 10%);
+  --input:             oklch(1 0 0 / 15%);
+  --ring:              oklch(0.73 0.12 185);
+  --sidebar:           oklch(0.12 0.04 255);
+  --sidebar-foreground: oklch(0.97 0.005 255);
+  --sidebar-primary:   oklch(0.73 0.12 185);
+  --sidebar-primary-foreground: oklch(0.10 0.03 255);
+  --sidebar-accent:    oklch(0.18 0.05 255);
+  --sidebar-accent-foreground: oklch(0.97 0.005 255);
+  --sidebar-border:    oklch(1 0 0 / 10%);
+  --sidebar-ring:      oklch(0.73 0.12 185);
+}
+
+/* ============================================
+   SHADCN THEME BRIDGE
+   Maps ShadCN variables into Tailwind v4
+   ============================================ */
+@theme inline {
+  --font-heading:                       var(--font-heading);
+  --font-sans:                          var(--font-sans);
+  --color-background:                   var(--background);
+  --color-foreground:                   var(--foreground);
+  --color-card:                         var(--card);
+  --color-card-foreground:              var(--card-foreground);
+  --color-popover:                      var(--popover);
+  --color-popover-foreground:           var(--popover-foreground);
+  --color-primary:                      var(--primary);
+  --color-primary-foreground:           var(--primary-foreground);
+  --color-secondary:                    var(--secondary);
+  --color-secondary-foreground:         var(--secondary-foreground);
+  --color-muted:                        var(--muted);
+  --color-muted-foreground:             var(--muted-foreground);
+  --color-accent:                       var(--accent);
+  --color-accent-foreground:            var(--accent-foreground);
+  --color-destructive:                  var(--destructive);
+  --color-border:                       var(--border);
+  --color-input:                        var(--input);
+  --color-ring:                         var(--ring);
+  --color-chart-1:                      var(--chart-1);
+  --color-chart-2:                      var(--chart-2);
+  --color-chart-3:                      var(--chart-3);
+  --color-chart-4:                      var(--chart-4);
+  --color-chart-5:                      var(--chart-5);
+  --color-sidebar:                      var(--sidebar);
+  --color-sidebar-foreground:           var(--sidebar-foreground);
+  --color-sidebar-primary:              var(--sidebar-primary);
+  --color-sidebar-primary-foreground:   var(--sidebar-primary-foreground);
+  --color-sidebar-accent:               var(--sidebar-accent);
+  --color-sidebar-accent-foreground:    var(--sidebar-accent-foreground);
+  --color-sidebar-border:               var(--sidebar-border);
+  --color-sidebar-ring:                 var(--sidebar-ring);
+  --radius-sm:  calc(var(--radius) * 0.6);
+  --radius-md:  calc(var(--radius) * 0.8);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ============================================
+   BASE RESET & GLOBAL STYLES
+   ============================================ */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -185,11 +229,8 @@ a {
   transition: color var(--transition);
 }
 
-a:hover {
-  color: var(--color-navy);
-}
+a:hover { color: var(--color-navy); }
 
-/* Keyboard accessibility — WCAG requirement */
 :focus-visible {
   outline: 2px solid var(--color-teal);
   outline-offset: 3px;
@@ -202,13 +243,9 @@ img {
   display: block;
 }
 
-/*
-  ============================================
-  REUSABLE UTILITY CLASSES
-  ============================================
-*/
-
-/* Centers content with max width on all pages */
+/* ============================================
+   REUSABLE UTILITY CLASSES
+   ============================================ */
 .container {
   width: 100%;
   max-width: 1280px;
@@ -218,13 +255,11 @@ img {
   padding-right: 1.5rem;
 }
 
-/* Standard vertical padding for every page section */
 .section-padding {
   padding-top: 5rem;
   padding-bottom: 5rem;
 }
 
-/* Brand gradient — hero backgrounds, dark CTAs */
 .gradient-brand {
   background: linear-gradient(
     135deg,
@@ -234,7 +269,6 @@ img {
   );
 }
 
-/* Teal underline under section headings */
 .heading-accent::after {
   content: "";
   display: block;
@@ -244,95 +278,14 @@ img {
   margin-top: 0.75rem;
 }
 
-/* Centered version of heading accent */
 .heading-accent-center::after {
   margin-left: auto;
   margin-right: auto;
 }
-/*
-  ---break---
-*/
-@theme inline {
-  --font-heading:       var(--font-sans);
-  --font-sans:       var(--font-sans);
-  --color-sidebar-ring:       var(--sidebar-ring);
-  --color-sidebar-border:       var(--sidebar-border);
-  --color-sidebar-accent-foreground:       var(--sidebar-accent-foreground);
-  --color-sidebar-accent:       var(--sidebar-accent);
-  --color-sidebar-primary-foreground:       var(--sidebar-primary-foreground);
-  --color-sidebar-primary:       var(--sidebar-primary);
-  --color-sidebar-foreground:       var(--sidebar-foreground);
-  --color-sidebar:       var(--sidebar);
-  --color-chart-5:       var(--chart-5);
-  --color-chart-4:       var(--chart-4);
-  --color-chart-3:       var(--chart-3);
-  --color-chart-2:       var(--chart-2);
-  --color-chart-1:       var(--chart-1);
-  --color-ring:       var(--ring);
-  --color-input:       var(--input);
-  --color-border:       var(--border);
-  --color-destructive:       var(--destructive);
-  --color-accent-foreground:       var(--accent-foreground);
-  --color-accent:       var(--accent);
-  --color-muted-foreground:       var(--muted-foreground);
-  --color-muted:       var(--muted);
-  --color-secondary-foreground:       var(--secondary-foreground);
-  --color-secondary:       var(--secondary);
-  --color-primary-foreground:       var(--primary-foreground);
-  --color-primary:       var(--primary);
-  --color-popover-foreground:       var(--popover-foreground);
-  --color-popover:       var(--popover);
-  --color-card-foreground:       var(--card-foreground);
-  --color-card:       var(--card);
-  --color-foreground:       var(--foreground);
-  --color-background:       var(--background);
-  --radius-sm:       calc(var(--radius) * 0.6);
-  --radius-md:       calc(var(--radius) * 0.8);
-  --radius-lg:       var(--radius);
-  --radius-xl:       calc(var(--radius) * 1.4);
-  --radius-2xl:       calc(var(--radius) * 1.8);
-  --radius-3xl:       calc(var(--radius) * 2.2);
-  --radius-4xl:       calc(var(--radius) * 2.6);
-}
-/*
-  ---break---
-*/
-.dark {
-  --background:       oklch(0.145 0 0);
-  --foreground:       oklch(0.985 0 0);
-  --card:       oklch(0.205 0 0);
-  --card-foreground:       oklch(0.985 0 0);
-  --popover:       oklch(0.205 0 0);
-  --popover-foreground:       oklch(0.985 0 0);
-  --primary:       oklch(0.922 0 0);
-  --primary-foreground:       oklch(0.205 0 0);
-  --secondary:       oklch(0.269 0 0);
-  --secondary-foreground:       oklch(0.985 0 0);
-  --muted:       oklch(0.269 0 0);
-  --muted-foreground:       oklch(0.708 0 0);
-  --accent:       oklch(0.269 0 0);
-  --accent-foreground:       oklch(0.985 0 0);
-  --destructive:       oklch(0.704 0.191 22.216);
-  --border:       oklch(1 0 0 / 10%);
-  --input:       oklch(1 0 0 / 15%);
-  --ring:       oklch(0.556 0 0);
-  --chart-1:       oklch(0.87 0 0);
-  --chart-2:       oklch(0.556 0 0);
-  --chart-3:       oklch(0.439 0 0);
-  --chart-4:       oklch(0.371 0 0);
-  --chart-5:       oklch(0.269 0 0);
-  --sidebar:       oklch(0.205 0 0);
-  --sidebar-foreground:       oklch(0.985 0 0);
-  --sidebar-primary:       oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground:       oklch(0.985 0 0);
-  --sidebar-accent:       oklch(0.269 0 0);
-  --sidebar-accent-foreground:       oklch(0.985 0 0);
-  --sidebar-border:       oklch(1 0 0 / 10%);
-  --sidebar-ring:       oklch(0.556 0 0);
-}
-/*
-  ---break---
-*/
+
+/* ============================================
+   SHADCN BASE LAYER
+   ============================================ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
