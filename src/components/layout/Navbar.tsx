@@ -10,21 +10,33 @@ const services = [
     title: "Web Development",
     href: "/services/web-development",
     description: "Modern, fast, and scalable websites and web applications.",
+    icon: "🌐",
+    bg: "#EEF4FF",
+    accent: "#1F4173",
   },
   {
     title: "Graphic Design",
     href: "/services/graphic-design",
     description: "Brand identity, UI design, and visual communication.",
+    icon: "🎨",
+    bg: "#FFF4E6",
+    accent: "#E8820C",
   },
   {
     title: "Data Analysis",
     href: "/services/data-analysis",
     description: "Turn raw data into actionable business insights.",
+    icon: "📊",
+    bg: "#E6FBF9",
+    accent: "#0B8E82",
   },
   {
     title: "Data Annotation",
     href: "/services/data-annotation",
     description: "High-quality labeled datasets for AI and ML projects.",
+    icon: "🤖",
+    bg: "#F3EEFF",
+    accent: "#6B21A8",
   },
 ];
 
@@ -41,17 +53,15 @@ export default function Navbar() {
   const [mobileOpen,      setMobileOpen]      = useState(false);
   const [servicesOpen,    setServicesOpen]    = useState(false);
   const [mobServicesOpen, setMobServicesOpen] = useState(false);
-  const pathname   = usePathname();
+  const pathname    = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll effect */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* Close services dropdown when clicking outside */
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -62,264 +72,94 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  /* Close mobile menu on route change */
   useEffect(() => {
     setMobileOpen(false);
     setServicesOpen(false);
   }, [pathname]);
 
+  /* Lock body scroll when mobile menu is open */
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   const isActive = (href: string) => pathname === href;
 
-  const navLinkClass = (href: string) =>
+  const linkClass = (href: string) =>
     `px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-      isActive(href)
-        ? "font-semibold"
-        : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+      isActive(href) ? "font-semibold" : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
     }`;
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-md"
-          : "bg-white/90 backdrop-blur-sm border-b border-gray-100"
-      }`}
-    >
-      <nav className="container flex items-center justify-between h-16 md:h-20">
-
-        {/* ── LOGO ── */}
-        <Link
-          href="/"
-          className="flex items-center gap-3 group flex-shrink-0"
-          aria-label="Kadimbotech Solutions — Home"
-        >
-          <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm transition-transform duration-200 group-hover:scale-105"
-            style={{ background: "var(--color-navy)" }}
-            aria-hidden="true"
-          >
-            KS
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span
-              className="font-bold text-base tracking-tight"
-              style={{ color: "var(--color-navy)", fontFamily: "var(--font-heading)" }}
-            >
-              Kadimbotech
-            </span>
-            <span
-              className="text-xs font-medium tracking-wider uppercase"
-              style={{ color: "var(--color-teal)" }}
-            >
-              Solutions
-            </span>
-          </div>
-        </Link>
-
-        {/* ── DESKTOP NAV ── */}
-        <div className="hidden lg:flex items-center gap-1">
-
-          {/* Home */}
-          <Link
-            href="/"
-            className={navLinkClass("/")}
-            style={isActive("/") ? { color: "var(--color-teal)" } : {}}
-          >
-            Home
-          </Link>
-
-          {/* About */}
-          <Link
-            href="/about"
-            className={navLinkClass("/about")}
-            style={isActive("/about") ? { color: "var(--color-teal)" } : {}}
-          >
-            About
-          </Link>
-
-          {/* Services dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setServicesOpen(!servicesOpen)}
-              className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200"
-              aria-expanded={servicesOpen}
-              aria-haspopup="true"
-            >
-              Services
-              <ChevronDown
-                className={`w-4 h-4 transition-transform duration-200 ${
-                  servicesOpen ? "rotate-180" : ""
-                }`}
-              />
-            </button>
-
-            {/* Dropdown panel */}
-            {servicesOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[480px] bg-white rounded-xl shadow-lg border border-gray-100 p-4 grid grid-cols-2 gap-2">
-                {services.map((service) => (
-                  <Link
-                    key={service.href}
-                    href={service.href}
-                    className="block rounded-lg p-3 hover:bg-gray-50 transition-colors group"
-                    onClick={() => setServicesOpen(false)}
-                  >
-                    <div
-                      className="font-semibold text-sm mb-1 group-hover:text-teal transition-colors"
-                      style={{ color: "var(--color-navy)" }}
-                    >
-                      {service.title}
-                    </div>
-                    <div className="text-xs text-gray-500 leading-relaxed">
-                      {service.description}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Remaining links */}
-          {navLinks.slice(1).map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={navLinkClass(link.href)}
-              style={isActive(link.href) ? { color: "var(--color-teal)" } : {}}
-            >
-              {link.label}
-            </Link>
-          ))}
-
-          {/* CTA */}
-          <Link
-            href="/contact"
-            className="ml-3 px-5 py-2 rounded-lg text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-md"
-            style={{ background: "var(--color-teal)" }}
-          >
-            Get a Quote
-          </Link>
-        </div>
-
-        {/* ── MOBILE CONTROLS ── */}
-        <div className="lg:hidden flex items-center gap-2">
-          <Link
-            href="/contact"
-            className="px-4 py-1.5 rounded-lg text-xs font-semibold text-white"
-            style={{ background: "var(--color-teal)" }}
-          >
-            Quote
-          </Link>
-
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-      </nav>
-
-      {/* ── MOBILE DRAWER ── */}
-      {/*
-        We build our own drawer instead of ShadCN Sheet
-        to avoid the nested button conflict.
-        It slides in from the right using CSS transition.
-      */}
-      <div
-        className={`lg:hidden fixed inset-0 z-40 transition-opacity duration-300 ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "bg-white/95 backdrop-blur-md shadow-md"
+            : "bg-white/90 backdrop-blur-sm border-b border-gray-100"
         }`}
       >
-        {/* Backdrop */}
-        <div
-          className="absolute inset-0 bg-black/40"
-          onClick={() => setMobileOpen(false)}
-          aria-hidden="true"
-        />
+        <nav className="container flex items-center justify-between h-16 md:h-20">
 
-        {/* Drawer panel */}
-        <div
-          className={`absolute top-0 right-0 h-full w-72 bg-white shadow-2xl transition-transform duration-300 flex flex-col ${
-            mobileOpen ? "translate-x-0" : "translate-x-full"
-          }`}
-        >
-          {/* Drawer header */}
-          <div
-            className="flex items-center justify-between p-5 border-b"
-            style={{ borderColor: "var(--color-border-brand)" }}
-          >
-            <Link
-              href="/"
-              className="flex items-center gap-2"
-              onClick={() => setMobileOpen(false)}
+          {/* LOGO */}
+          <Link href="/" className="flex items-center gap-3 group flex-shrink-0" aria-label="Kadimbotech Solutions">
+            <div
+              className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm transition-transform duration-200 group-hover:scale-105"
+              style={{ background: "var(--color-navy)" }}
             >
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs"
-                style={{ background: "var(--color-navy)" }}
-              >
-                KS
-              </div>
-              <span
-                className="font-bold text-sm"
-                style={{ color: "var(--color-navy)" }}
-              >
+              KS
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="font-bold text-base tracking-tight" style={{ color: "var(--color-navy)", fontFamily: "var(--font-heading)" }}>
                 Kadimbotech
               </span>
-            </Link>
-            <button
-              onClick={() => setMobileOpen(false)}
-              className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 transition-colors"
-              aria-label="Close menu"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
+              <span className="text-xs font-medium tracking-wider uppercase" style={{ color: "var(--color-teal)" }}>
+                Solutions
+              </span>
+            </div>
+          </Link>
 
-          {/* Drawer links */}
-          <nav className="flex-1 overflow-y-auto p-5 flex flex-col gap-1">
-            <Link
-              href="/"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2.5 rounded-md text-sm font-medium transition-colors text-gray-700 hover:bg-gray-50"
-              style={isActive("/") ? { color: "var(--color-teal)", fontWeight: 600 } : {}}
-            >
-              Home
-            </Link>
+          {/* DESKTOP NAV */}
+          <div className="hidden lg:flex items-center gap-1">
+            <Link href="/" className={linkClass("/")} style={isActive("/") ? { color: "var(--color-teal)" } : {}}>Home</Link>
+            <Link href="/about" className={linkClass("/about")} style={isActive("/about") ? { color: "var(--color-teal)" } : {}}>About</Link>
 
-            <Link
-              href="/about"
-              onClick={() => setMobileOpen(false)}
-              className="px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              About
-            </Link>
-
-            {/* Mobile services accordion */}
-            <div>
+            {/* Services dropdown */}
+            <div className="relative" ref={dropdownRef}>
               <button
-                onClick={() => setMobServicesOpen(!mobServicesOpen)}
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                onClick={() => setServicesOpen(!servicesOpen)}
+                className="flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200"
+                aria-expanded={servicesOpen}
               >
                 Services
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform duration-200 ${
-                    mobServicesOpen ? "rotate-180" : ""
-                  }`}
-                />
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`} />
               </button>
 
-              {mobServicesOpen && (
-                <div className="ml-3 mt-1 flex flex-col gap-1">
+              {servicesOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-white rounded-2xl shadow-xl border border-gray-100 p-4 grid grid-cols-2 gap-3">
                   {services.map((service) => (
                     <Link
                       key={service.href}
                       href={service.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+                      onClick={() => setServicesOpen(false)}
+                      className="flex items-start gap-3 p-3 rounded-xl transition-all duration-200 hover:shadow-sm group"
+                      style={{ background: service.bg }}
                     >
-                      {service.title}
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0 bg-white shadow-sm">
+                        {service.icon}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm mb-0.5 transition-colors" style={{ color: service.accent }}>
+                          {service.title}
+                        </div>
+                        <div className="text-xs leading-relaxed text-gray-500">
+                          {service.description}
+                        </div>
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -327,34 +167,160 @@ export default function Navbar() {
             </div>
 
             {navLinks.slice(1).map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                style={isActive(link.href) ? { color: "var(--color-teal)", fontWeight: 600 } : {}}
-              >
+              <Link key={link.href} href={link.href} className={linkClass(link.href)} style={isActive(link.href) ? { color: "var(--color-teal)" } : {}}>
                 {link.label}
               </Link>
             ))}
 
-            {/* Mobile CTA */}
-            <div
-              className="mt-4 pt-4 border-t"
-              style={{ borderColor: "var(--color-border-brand)" }}
+            <Link
+              href="/contact"
+              className="ml-3 px-5 py-2 rounded-lg text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 hover:shadow-md"
+              style={{ background: "var(--color-teal)" }}
             >
-              <Link
-                href="/contact"
-                onClick={() => setMobileOpen(false)}
-                className="block w-full text-center px-5 py-3 rounded-lg text-sm font-semibold text-white transition-all duration-200 hover:opacity-90"
-                style={{ background: "var(--color-navy)" }}
-              >
-                Get a Free Quote
+              Get a Quote
+            </Link>
+          </div>
+
+          {/* MOBILE CONTROLS */}
+          <div className="lg:hidden flex items-center gap-2">
+            <Link
+              href="/contact"
+              className="px-4 py-1.5 rounded-lg text-xs font-semibold text-white"
+              style={{ background: "var(--color-teal)" }}
+            >
+              Quote
+            </Link>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-2 rounded-md transition-colors"
+              style={{ color: "var(--color-navy)" }}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* MOBILE DRAWER — rendered outside header to avoid z-index issues */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-[100]">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setMobileOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Drawer panel */}
+          <div
+            className="absolute top-0 right-0 h-full w-80 flex flex-col"
+            style={{ background: "#ffffff", boxShadow: "-4px 0 24px rgba(0,0,0,0.15)" }}
+          >
+            {/* Drawer header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs" style={{ background: "var(--color-navy)" }}>
+                  KS
+                </div>
+                <span className="font-bold text-sm" style={{ color: "var(--color-navy)" }}>Kadimbotech</span>
               </Link>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="p-1.5 rounded-md hover:bg-gray-100 transition-colors"
+                aria-label="Close menu"
+                style={{ color: "var(--color-navy)" }}
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
-          </nav>
+
+            {/* Drawer links */}
+            <nav className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-1">
+              <Link
+                href="/"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center px-3 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50"
+                style={{ color: isActive("/") ? "var(--color-teal)" : "var(--color-text-primary)", fontWeight: isActive("/") ? 600 : 500 }}
+              >
+                Home
+              </Link>
+
+              <Link
+                href="/about"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center px-3 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50"
+                style={{ color: isActive("/about") ? "var(--color-teal)" : "var(--color-text-primary)" }}
+              >
+                About
+              </Link>
+
+              {/* Services accordion */}
+              <div>
+                <button
+                  onClick={() => setMobServicesOpen(!mobServicesOpen)}
+                  className="w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50"
+                  style={{ color: "var(--color-text-primary)" }}
+                >
+                  Services
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${mobServicesOpen ? "rotate-180" : ""}`} style={{ color: "var(--color-teal)" }} />
+                </button>
+
+                {mobServicesOpen && (
+                  <div className="ml-2 mt-1 flex flex-col gap-2 pb-2">
+                    {services.map((service) => (
+                      <Link
+                        key={service.href}
+                        href={service.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors"
+                        style={{ background: service.bg }}
+                      >
+                        <span className="text-lg">{service.icon}</span>
+                        <span className="text-sm font-medium" style={{ color: service.accent }}>{service.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {navLinks.slice(1).map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center px-3 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50"
+                  style={{ color: isActive(link.href) ? "var(--color-teal)" : "var(--color-text-primary)", fontWeight: isActive(link.href) ? 600 : 500 }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+              {/* Mobile CTA */}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90"
+                  style={{ background: "var(--color-navy)" }}
+                >
+                  Get a Free Quote
+                </Link>
+                <a
+                  href="https://wa.me/254700000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-full py-3.5 rounded-xl text-sm font-semibold text-white mt-2 transition-all hover:opacity-90"
+                  style={{ background: "#25D366" }}
+                >
+                  💬 WhatsApp Us
+                </a>
+              </div>
+            </nav>
+          </div>
         </div>
-      </div>
-    </header>
+      )}
+    </>
   );
 }
