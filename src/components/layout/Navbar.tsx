@@ -95,11 +95,13 @@ export default function Navbar() {
 
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 group flex-shrink-0" aria-label="Kadimbotech Solutions">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm transition-transform duration-200 group-hover:scale-105" style={{ background: "var(--color-navy)" }}>KS</div>
-            <div className="flex flex-col leading-tight">
-              <span className="font-bold text-base tracking-tight" style={{ color: "var(--color-navy)", fontFamily: "var(--font-heading)" }}>Kadimbotech</span>
-              <span className="text-xs font-medium tracking-wider uppercase" style={{ color: "var(--color-teal)" }}>Solutions</span>
-            </div>
+          <img
+              src="/logo.png"
+              alt="Kadimbotech Solutions Logo"
+              width={50}
+              height={20}
+              className="h-8 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+            />
           </Link>
 
           {/* DESKTOP NAV */}
@@ -168,9 +170,14 @@ export default function Navbar() {
           <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)} aria-hidden="true" />
           <div className="absolute top-0 right-0 h-full w-80 flex flex-col" style={{ background: "#ffffff", boxShadow: "-4px 0 24px rgba(0,0,0,0.15)" }}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-              <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs" style={{ background: "var(--color-navy)" }}>KS</div>
-                <span className="font-bold text-sm" style={{ color: "var(--color-navy)" }}>Kadimbotech</span>
+              <Link href="/" className="flex items-center" onClick={() => setMobileOpen(false)}>
+          <img
+                  src="/logo.png"
+                  alt="Kadimbotech Solutions"
+                  width={40}
+                  height={16}
+                  className="h-7 w-auto object-contain"
+                />
               </Link>
               <button onClick={() => setMobileOpen(false)} className="p-1.5 rounded-md hover:bg-gray-100 transition-colors" style={{ color: "var(--color-navy)" }}>
                 <X className="w-5 h-5" />

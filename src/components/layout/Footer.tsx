@@ -30,12 +30,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
 
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-4 w-fit">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm" style={{ background: "var(--color-teal)" }}>KS</div>
-              <div className="flex flex-col leading-tight">
-                <span className="font-bold text-white text-base">Kadimbotech</span>
-                <span className="text-xs font-medium tracking-wider uppercase" style={{ color: "var(--color-teal)" }}>Solutions</span>
-              </div>
+            <Link href="/" className="flex items-center mb-4 w-fit">
+              <img
+                src="/logo.png"
+                alt="Kadimbotech Solutions"
+                width={140}
+                height={56}
+                className="h-12 w-auto object-contain brightness-0 invert"
+              />
             </Link>
             <p className="text-sm leading-relaxed mb-6 max-w-xs" style={{ color: "rgba(255,255,255,0.6)" }}>
               Empowering Ideas, Driving Innovation. We build modern digital solutions for businesses across Kenya, Africa, and the world.
