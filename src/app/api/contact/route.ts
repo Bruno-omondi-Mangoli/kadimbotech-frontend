@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
           },
           body: JSON.stringify({
             from: "Kadimbotech Website <onboarding@resend.dev>",
-            to: ["kadimbotechsolutions@gmail.com"],
+            to: ["mangolibruno@gmail.com"],
             subject: `New Contact Form Submission: ${subject || "General Inquiry"}`,
             html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
