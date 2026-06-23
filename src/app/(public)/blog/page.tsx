@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CTASection from "@/components/sections/CTASection";
+import NewsletterForm from "@/components/sections/NewsletterForm";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -169,10 +170,7 @@ export default function BlogPage() {
           <div className="mt-16 p-8 rounded-2xl text-center" style={{ background: "var(--color-navy)" }}>
             <h3 className="text-2xl font-bold text-white mb-3">Never Miss an Article</h3>
             <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.7)" }}>Subscribe to our newsletter for weekly insights on tech, design, and business growth.</p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input type="email" placeholder="your@email.com" className="flex-1 px-4 py-3 rounded-lg text-sm outline-none" style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)" }} />
-              <button className="px-6 py-3 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90" style={{ background: "var(--color-teal)" }}>Subscribe</button>
-            </div>
+            <NewsletterForm />
           </div>
 
         </div>
