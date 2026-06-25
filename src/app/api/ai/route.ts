@@ -26,71 +26,51 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid request." }, { status: 400 });
     }
 
-    const apiKey = process.env.HF_API_KEY;
-    if (!apiKey) {
+    const apiToken = process.env.CF_API_TOKEN;
+    const accountId = process.env.CF_ACCOUNT_ID;
+
+    if (!apiToken || !accountId) {
       return NextResponse.json({ error: "AI service not configured." }, { status: 500 });
     }
 
-    const lastUserMessage = messages.filter((m: {role: string}) => m.role === "user").pop()?.content || "";
-
-    const conversationHistory = messages
-      .slice(-6)
-      .map((msg: { role: string; content: string }) =>
-        msg.role === "user"
-          ? `<|im_start|>user\n${msg.content}<|im_end|>`
-          : `<|im_start|>assistant\n${msg.content}<|im_end|>`
-      )
-      .join("\n");
-
-    const fullPrompt = `<|im_start|>system\n${SYSTEM_PROMPT}<|im_end|>\n${conversationHistory}\n<|im_start|>assistant\n`;
+    /* Build messages array for Cloudflare AI */
+    const cfMessages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages.slice(-8).map((msg: { role: string; content: string }) => ({
+        role: msg.role === "user" ? "user" : "assistant",
+        content: msg.content,
+      })),
+    ];
 
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/Qwen/Qwen2.5-1.5B-Instruct",
+      `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.1-8b-instruct`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${apiToken}`,
         },
-        body: JSON.stringify({
-          inputs: fullPrompt,
-          parameters: {
-            max_new_tokens: 250,
-            temperature: 0.7,
-            return_full_text: false,
-            stop: ["<|im_end|>", "<|im_start|>"],
-          },
-        }),
+        body: JSON.stringify({ messages: cfMessages }),
       }
     );
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("HF error status:", response.status, errorText);
-      return NextResponse.json({ error: "AI service error." }, { status: 500 });
+      console.error("CF AI error:", response.status, errorText);
+      return NextResponse.json({
+        reply: "I am having trouble connecting right now. Please contact us at kadimbotechsolutions@gmail.com or WhatsApp +254 704 708 970.",
+      }, { status: 200 });
     }
 
     const data = await response.json();
-
-    let reply = "";
-    if (Array.isArray(data) && data[0]?.generated_text) {
-      reply = data[0].generated_text.trim();
-    } else if (data?.generated_text) {
-      reply = data.generated_text.trim();
-    }
-
-    reply = reply.split("<|im_end|>")[0].trim();
-    reply = reply.split("<|im_start|>")[0].trim();
-
-    if (!reply) {
-      reply = "I am sorry, I could not process that. Please contact us directly at kadimbotechsolutions@gmail.com or WhatsApp +254 704 708 970.";
-    }
+    const reply = data?.result?.response ||
+      "I am sorry, I could not process that. Please contact us at kadimbotechsolutions@gmail.com or WhatsApp +254 704 708 970.";
 
     return NextResponse.json({ reply }, { status: 200 });
   } catch (error) {
     console.error("AI chat error:", error);
     return NextResponse.json({
-      reply: "I am having trouble connecting right now. Please contact us directly at kadimbotechsolutions@gmail.com or WhatsApp +254 704 708 970.",
+      reply: "I am having trouble connecting right now. Please contact us at kadimbotechsolutions@gmail.com or WhatsApp +254 704 708 970.",
     }, { status: 200 });
   }
 }
