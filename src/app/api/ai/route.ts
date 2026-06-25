@@ -8,19 +8,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid request." }, { status: 400 });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.HF_API_KEY;
     if (!apiKey) {
       return NextResponse.json({ error: "AI service not configured." }, { status: 500 });
     }
 
     const systemPrompt = `You are Kadi, the friendly AI assistant for Kadimbotech Solutions — a Kenya-based technology company.
-
-Your role is to:
-- Welcome visitors warmly and answer questions about Kadimbotech Solutions
-- Help visitors understand our services
-- Guide visitors to the right page or service
-- Collect leads by asking for name and email when appropriate
-- Encourage visitors to get a free quote
 
 About Kadimbotech Solutions:
 - Founded: 2024 in Nairobi, Kenya
@@ -29,52 +22,71 @@ About Kadimbotech Solutions:
 - Contact: kadimbotechsolutions@gmail.com | +254 704 708 970
 - WhatsApp: +254 704 708 970
 - Location: Nairobi CBD, Kenya
-- Website: kadimbotechsolutions.online
 - Founder: Bruno Omondi Mang'oli
 
-Services details:
-1. Web Development — Modern websites, web apps, e-commerce, Next.js, React, TypeScript. Fast, secure, SEO-optimized, mobile-responsive.
-2. Graphic Design — Logo design, brand identity, UI/UX design, marketing materials, pitch decks, packaging.
-3. Data Analysis — Business intelligence, dashboards, data visualization, predictive analytics, Power BI, Python, SQL.
-4. Data Annotation — Image annotation, text labeling, video annotation, audio transcription, multilingual (Swahili/English), 95%+ accuracy.
+Services:
+1. Web Development — Modern websites, web apps, e-commerce, Next.js, React, TypeScript. Fast, secure, SEO-optimized.
+2. Graphic Design — Logo design, brand identity, UI/UX design, marketing materials.
+3. Data Analysis — Business intelligence, dashboards, data visualization, Power BI, Python, SQL.
+4. Data Annotation — Image annotation, text labeling, video annotation, Swahili and English, 95%+ accuracy.
 
-Pricing: We provide custom quotes based on project scope. Encourage visitors to fill the contact form or WhatsApp us.
+Pricing: Custom quotes. Direct visitors to contact form or WhatsApp.
+Be friendly, professional, concise. Always end with a helpful next step.`;
 
-Personality: Friendly, professional, helpful, concise. Use short paragraphs. Never make up information. If unsure, direct to contact page.
+    /* Build conversation string for the model */
+    const conversationHistory = messages
+      .slice(-6)
+      .map((msg: { role: string; content: string }) =>
+        msg.role === "user" ? `User: ${msg.content}` : `Kadi: ${msg.content}`
+      )
+      .join("\n");
 
-Always end responses with a helpful next step like visiting a page, contacting us, or getting a quote.`;
+    const prompt = `${systemPrompt}\n\nConversation:\n${conversationHistory}\nKadi:`;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages.slice(-10),
-        ],
-        max_tokens: 300,
-        temperature: 0.7,
-      }),
-    });
+    const response = await fetch(
+      "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          inputs: prompt,
+          parameters: {
+            max_new_tokens: 200,
+            temperature: 0.7,
+            return_full_text: false,
+            stop: ["User:", "\nUser"],
+          },
+        }),
+      }
+    );
 
     if (!response.ok) {
-      const error = await response.json();
-      console.error("OpenAI error:", error);
+      const error = await response.text();
+      console.error("HF error:", error);
       return NextResponse.json({ error: "AI service error." }, { status: 500 });
     }
 
     const data = await response.json();
-    const reply = data.choices[0]?.message?.content || "I am sorry, I could not process that. Please contact us directly at kadimbotechsolutions@gmail.com.";
+
+    let reply = "";
+    if (Array.isArray(data) && data[0]?.generated_text) {
+      reply = data[0].generated_text.trim();
+    } else if (data?.generated_text) {
+      reply = data.generated_text.trim();
+    } else {
+      reply = "I am sorry, I could not process that. Please contact us directly at kadimbotechsolutions@gmail.com.";
+    }
+
+    /* Clean up any leftover stop tokens */
+    reply = reply.split("User:")[0].trim();
+    reply = reply.split("\nUser")[0].trim();
 
     return NextResponse.json({ reply }, { status: 200 });
   } catch (error) {
     console.error("AI chat error:", error);
-    console.log("API Key present:", !!process.env.OPENAI_API_KEY);
-console.log("API Key prefix:", process.env.OPENAI_API_KEY?.slice(0, 10));
     return NextResponse.json({ error: "Internal server error." }, { status: 500 });
   }
 }
