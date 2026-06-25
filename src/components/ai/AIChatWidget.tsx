@@ -22,7 +22,8 @@ const suggestedQuestions = [
 
 async function saveLead(lead: LeadData) {
   try {
-    await fetch("/api/contact", {
+    console.log("Saving lead:", lead);
+    const res = await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -32,6 +33,7 @@ async function saveLead(lead: LeadData) {
         message: `Lead captured via AI chat assistant.\nName: ${lead.name || "Not provided"}\nEmail: ${lead.email || "Not provided"}\nService interest: ${lead.service || "Not specified"}`,
       }),
     });
+    console.log("Lead save response:", res.status);
   } catch (e) {
     console.error("Lead save error:", e);
   }
@@ -44,12 +46,13 @@ function extractEmail(text: string): string | null {
 
 function extractName(text: string): string | null {
   const patterns = [
-    /(?:my name is|i am|i'm|call me)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/i,
-    /^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)$/,
+    /(?:my name is|i am|i'm|call me|name is)\s+([A-Za-z]+(?:\s+[A-Za-z]+)?)/i,
+    /^([A-Za-z]+(?:\s+[A-Za-z]+){1,2})$/,
+    /^([A-Za-z]+\s+[A-Za-z]+)/,
   ];
   for (const pattern of patterns) {
-    const match = text.match(pattern);
-    if (match) return match[1];
+    const match = text.trim().match(pattern);
+    if (match && match[1].length > 2) return match[1];
   }
   return null;
 }
@@ -97,7 +100,7 @@ export default function AIChatWidget() {
     setLead(updatedLead);
 
     /* Save lead when we have both name and email */
-    if (updatedLead.name && updatedLead.email && !leadSaved) {
+    if (updatedLead.email && !leadSaved) {
       setLeadSaved(true);
       await saveLead(updatedLead);
     }
