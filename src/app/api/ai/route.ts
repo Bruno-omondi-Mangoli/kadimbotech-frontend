@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    const reply = data?.result?.response ||
+    const reply = data?.result?.choices?.[0]?.message?.content || data?.result?.response ||
       "I am sorry, I could not process that. Please contact us at kadimbotechsolutions@gmail.com or WhatsApp +254 704 708 970.";
 
     return NextResponse.json({ reply }, { status: 200 });
