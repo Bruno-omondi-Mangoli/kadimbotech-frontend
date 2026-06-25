@@ -6,7 +6,7 @@ async function getTestimonials() {
     if (!cmsUrl) return null;
     const res = await fetch(
       `${cmsUrl}/api/testimonials?where[approved][equals]=true&limit=6`,
-      { next: { revalidate: 3600 } }
+     { next: { revalidate: 60 } }
     );
     if (!res.ok) return null;
     const data = await res.json();
