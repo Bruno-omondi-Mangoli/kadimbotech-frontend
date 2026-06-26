@@ -11,23 +11,24 @@ export default function CTASection() {
           Ready to Build Something Great?
         </h2>
         <p
-          className="text-lg max-w-2xl mx-auto mb-10"
-          style={{ color: "rgba(255,255,255,0.75)" }}
+          className="text-lg max-w-2xl mx-auto mb-12"
+          style={{ color: "rgba(255,255,255,0.82)" }}
         >
           Let&apos;s turn your idea into a world-class digital product. Get a
           free consultation and quote from our team today.
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
           <Link
             href="/contact"
-            className="px-8 py-4 rounded-xl text-base font-semibold text-navy bg-white transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-            style={{ color: "var(--color-navy)" }}
+            className="inline-flex items-center justify-center px-10 py-4 rounded-xl text-base font-bold transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 whitespace-nowrap"
+            style={{ background: "#F4C542", color: "#1F4173", minWidth: "180px" }}
           >
             Get a Free Quote
           </Link>
           <Link
             href="/services"
-            className="px-8 py-4 rounded-xl text-base font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 border border-white/30 hover:bg-white/10"
+            className="inline-flex items-center justify-center px-10 py-4 rounded-xl text-base font-bold text-white transition-all duration-200 hover:-translate-y-0.5 border-2 whitespace-nowrap"
+            style={{ borderColor: "rgba(255,255,255,0.5)", background: "rgba(255,255,255,0.1)", minWidth: "180px" }}
           >
             Explore Services
           </Link>

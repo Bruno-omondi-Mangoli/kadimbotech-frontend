@@ -30,14 +30,12 @@ export default function Navbar() {
   const pathname    = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll effect */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* Close dropdown on outside click */
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -48,19 +46,16 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  /* Close mobile menu on route change */
   useEffect(() => {
     setMobileOpen(false);
     setServicesOpen(false);
   }, [pathname]);
 
-  /* Lock body scroll when mobile menu open */
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  /* Dark mode toggle */
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved === "dark") {
@@ -85,37 +80,43 @@ export default function Navbar() {
 
   const linkClass = (href: string) =>
     `px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-      isActive(href) ? "font-semibold" : "text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+      isActive(href) ? "font-semibold" : "hover:bg-gray-100"
     }`;
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-md" : "bg-white/90 backdrop-blur-sm border-b border-gray-100"}`}>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled ? "shadow-md" : "border-b"
+        }`}
+        style={{
+          background: scrolled ? "rgba(255,255,255,0.97)" : "rgba(255,255,255,0.95)",
+          backdropFilter: "blur(12px)",
+          borderColor: "rgba(0,0,0,0.06)",
+        }}
+      >
         <nav className="container flex items-center justify-between h-16 md:h-20">
 
           {/* LOGO */}
           <Link href="/" className="flex items-center gap-3 group flex-shrink-0" aria-label="Kadimbotech Solutions">
-          <img
-              src="/logo.png"
-              alt="Kadimbotech Solutions Logo"
-              width={50}
-              height={20}
-              className="h-8 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
-            />
+            <img src="/logo.png" alt="Kadimbotech Solutions" width={110} height={44} className="h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105" />
           </Link>
 
           {/* DESKTOP NAV */}
-          <div className="hidden lg:flex items-center gap-2">
-
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.slice(0, 2).map((link) => (
-              <Link key={link.href} href={link.href} className={linkClass(link.href)} style={isActive(link.href) ? { color: "var(--color-teal)" } : {}}>
+              <Link key={link.href} href={link.href} className={linkClass(link.href)} style={{ color: isActive(link.href) ? "var(--color-teal)" : "var(--color-text-primary)" }}>
                 {link.label}
               </Link>
             ))}
 
             {/* Services dropdown */}
             <div className="relative" ref={dropdownRef}>
-              <button onClick={() => setServicesOpen(!servicesOpen)} className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200" aria-expanded={servicesOpen}>
+              <button
+                onClick={() => setServicesOpen(!servicesOpen)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium transition-colors hover:bg-gray-100"
+                style={{ color: "var(--color-text-primary)" }}
+              >
                 Services
                 <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`} />
               </button>
@@ -135,29 +136,33 @@ export default function Navbar() {
             </div>
 
             {navLinks.slice(2).map((link) => (
-              <Link key={link.href} href={link.href} className={linkClass(link.href)} style={isActive(link.href) ? { color: "var(--color-teal)" } : {}}>
+              <Link key={link.href} href={link.href} className={linkClass(link.href)} style={{ color: isActive(link.href) ? "var(--color-teal)" : "var(--color-text-primary)" }}>
                 {link.label}
               </Link>
             ))}
 
             {/* Dark mode toggle */}
-            <button onClick={toggleDark} className="p-2 rounded-md text-gray-500 hover:bg-gray-100 transition-colors ml-1" aria-label="Toggle dark mode">
+            <button onClick={toggleDark} className="p-2 rounded-md transition-colors hover:bg-gray-100 ml-1" aria-label="Toggle dark mode" style={{ color: "var(--color-text-secondary)" }}>
               {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
-            {/* CTA */}
-            <Link href="/contact" className="ml-2 px-6 py-2.5 rounded-lg text-sm font-bold text-white transition-all duration-200 hover:opacity-90 hover:shadow-md" style={{ background: "var(--color-teal)" }}>
+            {/* CTA — always visible with solid background */}
+            <Link
+              href="/contact"
+              className="ml-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5"
+              style={{ background: "var(--color-teal)", color: "#ffffff" }}
+            >
               Get a Quote
             </Link>
           </div>
 
           {/* MOBILE CONTROLS */}
           <div className="lg:hidden flex items-center gap-2">
-            <button onClick={toggleDark} className="p-2 rounded-md text-gray-500 hover:bg-gray-100 transition-colors" aria-label="Toggle dark mode">
+            <button onClick={toggleDark} className="p-2 rounded-md hover:bg-gray-100 transition-colors" style={{ color: "var(--color-text-secondary)" }}>
               {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             <Link href="/contact" className="px-4 py-1.5 rounded-lg text-xs font-bold text-white" style={{ background: "var(--color-teal)" }}>Quote</Link>
-            <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-md transition-colors" style={{ color: "var(--color-navy)" }} aria-label={mobileOpen ? "Close menu" : "Open menu"}>
+            <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-md hover:bg-gray-100 transition-colors" style={{ color: "var(--color-navy)" }}>
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
@@ -171,27 +176,18 @@ export default function Navbar() {
           <div className="absolute top-0 right-0 h-full w-80 flex flex-col" style={{ background: "#ffffff", boxShadow: "-4px 0 24px rgba(0,0,0,0.15)" }}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
               <Link href="/" className="flex items-center" onClick={() => setMobileOpen(false)}>
-          <img
-                  src="/logo.png"
-                  alt="Kadimbotech Solutions"
-                  width={40}
-                  height={16}
-                  className="h-7 w-auto object-contain"
-                />
+                <img src="/logo.png" alt="Kadimbotech" width={90} height={36} className="h-8 w-auto object-contain" />
               </Link>
               <button onClick={() => setMobileOpen(false)} className="p-1.5 rounded-md hover:bg-gray-100 transition-colors" style={{ color: "var(--color-navy)" }}>
                 <X className="w-5 h-5" />
               </button>
             </div>
-
             <nav className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-1">
               {navLinks.slice(0, 2).map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="flex items-center px-3 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50" style={{ color: isActive(link.href) ? "var(--color-teal)" : "var(--color-text-primary)", fontWeight: isActive(link.href) ? 600 : 500 }}>
                   {link.label}
                 </Link>
               ))}
-
-              {/* Services accordion */}
               <div>
                 <button onClick={() => setMobServicesOpen(!mobServicesOpen)} className="w-full flex items-center justify-between px-3 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50" style={{ color: "var(--color-text-primary)" }}>
                   Services
@@ -208,13 +204,11 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-
               {navLinks.slice(2).map((link) => (
                 <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="flex items-center px-3 py-3 rounded-xl text-sm font-medium transition-colors hover:bg-gray-50" style={{ color: isActive(link.href) ? "var(--color-teal)" : "var(--color-text-primary)", fontWeight: isActive(link.href) ? 600 : 500 }}>
                   {link.label}
                 </Link>
               ))}
-
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <Link href="/contact" onClick={() => setMobileOpen(false)} className="flex items-center justify-center w-full py-3.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90" style={{ background: "var(--color-navy)" }}>
                   Get a Free Quote

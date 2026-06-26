@@ -24,37 +24,41 @@ export default function NewsletterForm() {
   };
 
   return (
-    <div>
+    <div className="w-full max-w-md mx-auto">
       {status === "success" && (
-        <p className="text-sm font-medium mb-4" style={{ color: "var(--color-teal)" }}>
-          ✅ Successfully subscribed! Check your inbox for a welcome email.
+        <p className="text-sm font-medium mb-4 text-center" style={{ color: "var(--color-teal)" }}>
+          ✅ Successfully subscribed! Check your inbox.
         </p>
       )}
       {status === "exists" && (
-        <p className="text-sm font-medium mb-4" style={{ color: "var(--color-gold)" }}>
+        <p className="text-sm font-medium mb-4 text-center" style={{ color: "var(--color-gold)" }}>
           ℹ️ You are already subscribed.
         </p>
       )}
       {status === "error" && (
-        <p className="text-sm font-medium mb-4" style={{ color: "#ef4444" }}>
+        <p className="text-sm font-medium mb-4 text-center" style={{ color: "#ef4444" }}>
           ❌ Something went wrong. Please try again.
         </p>
       )}
-      <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+      <div className="flex flex-col sm:flex-row gap-3">
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="your@email.com"
-          className="flex-1 px-4 py-3 rounded-lg text-sm outline-none"
-          style={{ background: "rgba(255,255,255,0.1)", color: "white", border: "1px solid rgba(255,255,255,0.2)" }}
+          placeholder="Enter your email address"
+          className="flex-1 px-4 py-3 rounded-xl text-sm outline-none min-w-0"
+          style={{
+            background: "rgba(255,255,255,0.12)",
+            color: "white",
+            border: "1px solid rgba(255,255,255,0.25)",
+          }}
           onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
         />
         <button
           onClick={handleSubmit}
           disabled={status === "sending"}
-          className="px-6 py-3 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-60"
-          style={{ background: "var(--color-teal)" }}
+          className="px-6 py-3 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 disabled:opacity-60 whitespace-nowrap flex-shrink-0"
+          style={{ background: "var(--color-teal)", minWidth: "120px" }}
         >
           {status === "sending" ? "Subscribing..." : "Subscribe"}
         </button>
