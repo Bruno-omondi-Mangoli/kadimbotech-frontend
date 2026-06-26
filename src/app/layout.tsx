@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
 import Footer from "@/components/layout/Footer";
 import AIChatWidget from "@/components/ai/AIChatWidget";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -68,6 +69,7 @@ export default function RootLayout({
       className={`${inter.variable} ${plusJakarta.variable}`}
     >
 <body>
+        <GoogleAnalytics />
         <Navbar />
         <main className="pt-16 md:pt-20">
           {children}
