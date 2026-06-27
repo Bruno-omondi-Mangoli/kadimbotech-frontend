@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
             Authorization: `Bearer ${resendKey}`,
           },
           body: JSON.stringify({
-            from: "Kadimbotech Solutions <onboarding@resend.dev>",
+            from: "Kadimbotech Solutions <hello@kadimbotechsolutions.online>",
             to: [email],
             subject: "Welcome to the Kadimbotech Newsletter!",
             html: `
